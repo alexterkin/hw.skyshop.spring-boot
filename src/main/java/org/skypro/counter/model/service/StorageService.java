@@ -1,6 +1,7 @@
 package org.skypro.counter.model.service;
 
 import org.skypro.counter.model.article.Article;
+import org.skypro.counter.model.exception.NoSuchProductException;
 import org.skypro.counter.model.product.DiscountedProduct;
 import org.skypro.counter.model.product.FixPriceProduct;
 import org.skypro.counter.model.product.Product;
@@ -37,6 +38,9 @@ public class StorageService {
     }
 
     public Optional<Product> getProductById(UUID id) {
+        if (id == null) {
+            throw new NoSuchProductException();
+        }
         return Optional.ofNullable(availableProducts.get(id));
     }
 
