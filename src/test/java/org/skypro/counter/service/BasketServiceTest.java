@@ -62,14 +62,22 @@ public class BasketServiceTest {
         Product orange = new SimpleProduct(id1, "апельсин", 75);
         Product lemon = new SimpleProduct(id2, "лимон", 110);
         Product banana = new SimpleProduct(id3, "банан", 90);
+        when(storageService.getProductById(id1)).thenReturn(Optional.of(orange));
+        when(storageService.getProductById(id2)).thenReturn(Optional.of(lemon));
+        when(storageService.getProductById(id3)).thenReturn(Optional.of(banana));
         Map<UUID, Integer> basketMap = new HashMap<>();
         basketMap.put(id1, 1);
         basketMap.put(id2, 2);
         basketMap.put(id3, 3);
-        UserBasket correctBasket = basketService.getUserBasket();
         when(basket.getProductsInBasket()).thenReturn(basketMap);
-        assertEquals(basketMap, correctBasket.getItems()
-                .stream().collect(Collectors.toMap(BasketItem::getProduct, BasketItem::getQuantity)));
+        UserBasket correctBasket = basketService.getUserBasket();
+        Map<Product, Integer> expectedMap = new HashMap<>();
+        expectedMap.put(orange, 1);
+        expectedMap.put(lemon, 2);
+        expectedMap.put(banana, 3);
+        Map<Product, Integer> actualMap = correctBasket.getItems()
+                .stream().collect(Collectors.toMap(BasketItem::getProduct, BasketItem::getQuantity));
+        assertEquals(expectedMap, actualMap);
     }
 
 
